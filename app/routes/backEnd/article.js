@@ -72,6 +72,16 @@ router.get('/changeStatus/:id/:status', function (req, res, next) {
   });
 });
 
+// change special
+router.get('/changeSpecial/:id/:special', function (req, res, next) {
+  let currentSpecial = paramsHelper.getParams(req.params, 'special', 'active');
+  let id = paramsHelper.getParams(req.params, 'id', '');
+
+  articleModel.changeSpecial(currentSpecial, id).then(() => {
+    res.send(currentSpecial);
+  });
+});
+
 // change multiple status
 router.post('/changeStatus/:status', function (req, res, next) {
   let currentStatus = paramsHelper.getParams(req.params, 'status', 'active');
@@ -151,7 +161,6 @@ router.post('/save',
   (req, res, next) => {
     uploadThumb(req, res, async function (err) {
       const errors = validationResult(req);
-      console.log(req.file);
       let item = Object.assign(req.body);
       let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
 

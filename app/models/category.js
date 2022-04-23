@@ -17,6 +17,25 @@ module.exports = {
             .skip((params.paginations.currentPage - 1) * params.paginations.totalItemPerPage)
     },
 
+    listItemsFrontend: (params = null,options = null) => {
+        let find ={};
+        let select = 'name';
+        let sort = {};
+        let limit = 10;
+
+        if (options.task == 'itemsSpecial') {
+            find = {status: 'active'};
+            sort = {ordering: 'asc'}
+        } else if (options.task == 'itemsCategory') {
+            find = {status: 'active'};
+            sort = {ordering: 'asc'}
+        } else if (options.task == 'category') {
+            find = {status: 'active'};
+            find = {_id:params.id}
+        }
+        return Model.find(find).select(select).limit(limit).sort(sort);
+    },
+
     listItemsInSelecbox: () => {
         return Model.find({}, { name: 1, _id: 1 });
     },

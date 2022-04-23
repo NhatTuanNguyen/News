@@ -18,6 +18,36 @@ module.exports = {
             .skip((params.paginations.currentPage - 1) * params.paginations.totalItemPerPage)
     },
 
+    listItemsFrontend: (params = null,options = null) => {
+        let find ={};
+        let select = 'name created.user_name created.time category.name thumb';
+        let sort = {};
+        let limit = 3;
+
+        if (options.task == 'itemsSpecial') {
+            find = {status: 'active',special:'active'};
+            select = 'name created.time thumb';
+            sort = {ordering: 'asc'}
+        } else if (options.task == 'itemsNew') {
+            find = {status: 'active'};
+            select = 'name created.user_name created.time category.name thumb content';
+            sort = {'created.time': 'desc'};
+        } else if (options.task == 'itemsInCategory') {
+            find = {status: 'active','category.id':params.id};
+            select = 'name created.user_name created.time category.name thumb content';
+            sort = {'created.time': 'desc'};
+            limit = 5;
+        } else if (options.task == 'itemsRandom') {
+            return Model.aggregate([
+                {$match:{status: 'active'}},
+                {$project:{_id: 0,name:1,created:1,thumb:1}},
+                {$sample:{size: 2}},
+            ]);
+        } 
+
+        return Model.find(find).select(select).limit(limit).sort(sort);
+    },
+
     getItems: (id) => {
         return Model.findById(id);
     },
@@ -40,6 +70,24 @@ module.exports = {
             return Model.updateOne({ _id: id }, data);
         } else if (options == 'updateMutiple') {
             data.status = currentStatus
+            return Model.updateMany({ _id: { $in: id } }, data);
+        }
+    },
+
+    changeSpecial: (currentSpechangeSpecial, id, options = 'updateOne') => {
+        let special = currentSpechangeSpecial === 'active' ? 'inactive' : 'active';
+        let data = {
+            special: special,
+            modified: {
+                user_id: 0,
+                user_name: 'admin',
+                time: Date.now(),
+            }
+        }
+        if (options == 'updateOne') {
+            return Model.updateOne({ _id: id }, data);
+        } else if (options == 'updateMutiple') {
+            data.special = currentStatus
             return Model.updateMany({ _id: { $in: id } }, data);
         }
     },
@@ -114,6 +162,7 @@ module.exports = {
             return Model.updateOne({ _id: item.id }, {
                 name: item.name,
                 status: item.status,
+                special: item.special,
                 ordering: parseInt(item.ordering),
                 content: item.content,
                 thumb: item.thumb,

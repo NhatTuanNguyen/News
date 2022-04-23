@@ -1,0 +1,22 @@
+<% const folderUpload = '/uploads/article/' %>
+<% include ./../helpers/formatDate %>
+<% include ./../helpers/formatSummary %>
+<!-- Latest News Widget -->
+<div class="single-widget-area news-widget mb-30">
+    <h4>Random News</h4>
+    <% itemsRandom.forEach((item)=>{%>
+    <!-- Single News Area -->
+    <div class="single-blog-post d-flex style-4 mb-30">
+        <!-- Blog Thumbnail -->
+        <div class="blog-thumbnail">
+            <a href="#"><img src="<%= folderUpload + item.thumb %>" alt=""></a>
+        </div>
+
+        <!-- Blog Content -->
+        <div class="blog-content">
+            <span class="post-date"><%= formatDateHelper(item.created.time) %></span>
+            <a href="#" class="post-title"><%= item.name %></a>
+        </div>
+    </div>
+    <%}) %> 
+</div>

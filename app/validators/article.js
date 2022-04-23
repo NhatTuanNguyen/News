@@ -7,6 +7,7 @@ const options = {
     name: { min: 5, max: 30 },
     ordering: { min: 0, max: 100 },
     status: { value: 'novalue' },
+    special: { value: 'novalue' },
     content: { min: 5, max: 30 },
     group_id: { value: 'novalue' },
 }
@@ -27,6 +28,10 @@ module.exports = {
             check('status', notify.ERROR_STATUS).custom(value => {
                 // console.log(value);
               return value !== options.status.value;
+            }),
+            // SPECIAL
+            check('special', notify.ERROR_STATUS).custom(value => {
+              return value !== options.special.value;
             }),
             // CONTENT
             check('content', util.format(notify.ERROR_NAME, options.content.min, options.content.max))

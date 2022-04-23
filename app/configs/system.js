@@ -1,4 +1,6 @@
 module.exports = {
     prefixAdmin: 'admin1ff23',
-    formatLongTime: 'HH:mm DD-MM-YYYY'
+    env:'production',
+    formatLongTime: 'HH:mm DD-MM-YYYY',
+    formatDayTime: 'DD-MM-YYYY',
 }

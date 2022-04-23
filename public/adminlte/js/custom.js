@@ -130,59 +130,64 @@ $(document).ready(function (e) {
     });
 
     // Change Status
-    $(".changeStatus").click(function(e){
-        e.preventDefault();
-        const changeStatusElement = $(this);
-        const icon = changeStatusElement.find('i');
-        const link = changeStatusElement.attr('href');
-        const arrStatus = link.split("/");
-        const id = arrStatus[3];
-        const currentStatus = arrStatus[4];
-        console.log(changeStatusElement.find('i'));
-        $.ajax({
-            type: "get",
-            url: link,
-            data: {id,currentStatus},
-            dataType: "text",
-            success: function (response) {
-                if(response == "active") {
-                    changeStatusElement.removeClass("btn-success");
-                    changeStatusElement.attr("href", link.replace('active','inactive'));
-                    changeStatusElement.removeClass("btn-success");
-                    changeStatusElement.addClass("btn-danger");
-                    icon.replaceWith('<i class="fas fa-minus"></i>');
-                } else {
-                    changeStatusElement.removeClass("btn-success");
-                    changeStatusElement.attr("href", link.replace('inactive','active'));
-                    changeStatusElement.removeClass("btn-danger");
-                    changeStatusElement.addClass("btn-success");  
-                    icon.replaceWith('<i class="fas fa-check"></i>');
+    const changeStatus = (className) => {
+        $(className).click(function (e) {
+            e.preventDefault();
+            const changeStatusElement = $(this);
+            const icon = changeStatusElement.find('i');
+            const link = changeStatusElement.attr('href');
+            const arrStatus = link.split("/");
+            const id = arrStatus[3];
+            const currentStatus = arrStatus[4];
+            console.log(changeStatusElement.find('i'));
+            $.ajax({
+                type: "get",
+                url: link,
+                data: { id, currentStatus },
+                dataType: "text",
+                success: function (response) {
+                    if (response == "active") {
+                        changeStatusElement.removeClass("btn-success");
+                        changeStatusElement.attr("href", link.replace('active', 'inactive'));
+                        changeStatusElement.removeClass("btn-success");
+                        changeStatusElement.addClass("btn-danger");
+                        icon.replaceWith('<i class="fas fa-minus"></i>');
+                    } else {
+                        changeStatusElement.removeClass("btn-success");
+                        changeStatusElement.attr("href", link.replace('inactive', 'active'));
+                        changeStatusElement.removeClass("btn-danger");
+                        changeStatusElement.addClass("btn-success");
+                        icon.replaceWith('<i class="fas fa-check"></i>');
+                    }
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 'Cập nhật status thành công',
+                        animation: true,
+                        position: 'top-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
                 }
-                Swal.fire({
-                    toast: true,
-                    icon: 'success',
-                    title: 'Cập nhật status thành công',
-                    animation: true,
-                    position: 'top-right',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                });
-            }
+            });
         });
-      });
+    }
 
-      // Change category or group
-    $(".changeType").change(function(e){
+    changeStatus('.changeStatus');
+    changeStatus('.changeSpecial');
+
+    // Change category or group
+    $(".changeType").change(function (e) {
         e.preventDefault();
         const id = $(this).attr('data-id');
         const idType = $(this).val();
         const nameSelect = $(this).find(`option[value="${idType}"]`).text();
-        const link = $(this).attr('data-link')+'changeType';
+        const link = $(this).attr('data-link') + 'changeType';
         $.ajax({
             type: "post",
             url: link,
-            data:{id,idType,nameSelect},
+            data: { id, idType, nameSelect },
             dataType: "text",
             success: function (response) {
                 Swal.fire({
@@ -197,20 +202,15 @@ $(document).ready(function (e) {
                 });
             }
         });
-      });
+    });
 
-      $('input[name="thumb"').change(function(e){
-        console.log($(this).val());
-        $.ajax({
-            type: "post",
-            url: "upload",
-            data: "data",
-            dataType: "dataType",
-            success: function (response) {
-                
-            }
-        });
-      });
+    $('input[name="thumb"').change(function (event) {
+        const output = $(this).closest('div').find('#previewImg')[0];
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    });
 });
 
 
@@ -291,7 +291,7 @@ const alerDelete = (test) => {
 var checkCount = 0;
 var textSelect = 'Bulk Action'
 $(".custom-control-input").change(function () {
-    if($('#check-all:checkbox:checked').length == 0) {
+    if ($('#check-all:checkbox:checked').length == 0) {
         checkCount = $('input:checkbox:checked').length;
     } else {
         checkCount = $('input:checkbox:checked').length - 1;
