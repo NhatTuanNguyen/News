@@ -1,5 +1,5 @@
 
-let createFilterStatus = async (currentStatus,collection) => {
+let createFilterStatus = async (params,collection) => {
     const currentModel = require(__path_schemas + collection);
 
     let statusFilter = [
@@ -11,9 +11,12 @@ let createFilterStatus = async (currentStatus,collection) => {
     // statusFilter.forEach((item, index) => {
     for (let index = 0;index < statusFilter.length;index++) {
         let item = statusFilter[index];
-        let condition = (item.name !== 'all') ? {status:item.name}:{};
-        if (item.name === currentStatus) statusFilter[index].class = "success"
-        await currentModel.count(condition).then((data) => {
+        let objWhere = (item.name !== 'all') ? {status:item.name}:{};
+        if (params.categoryId !== "novalue") objWhere['category.id'] = params.categoryId;
+        if (params.keyword !== "") objWhere.name = new RegExp(params.keyword, 'i');
+        if (item.name === params.currentStatus) statusFilter[index].class = "success";
+        
+        await currentModel.count(objWhere).then((data) => {
             statusFilter[index].count = data
         })
     }

@@ -11,4 +11,5 @@ module.exports = {
     folder_models : 'models',
     folder_public : 'public',
     folder_uploads : 'uploads',
+    folder_middleware : 'middleware',
 }

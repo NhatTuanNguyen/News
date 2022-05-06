@@ -1,6 +1,5 @@
 var express = require('express');
 
-const { body, validationResult } = require('express-validator');
 var router = express.Router();
 
 const util = require('util');
@@ -18,18 +17,17 @@ const pageTitleIndex = 'Article Management';
 const pageTitleAdd = pageTitleIndex + ' - Add';
 const pageTitleEdit = pageTitleIndex + ' - Edit';
 const folderView = __path_views_admin + 'pages/article/';
-uploadThumb = fileHelper.upload('thumb','article');
+uploadThumb = fileHelper.upload('thumb', 'article');
 
 /* GET article listing. */
 router.get('(/status/:status)?', async (req, res, next) => {
-
   let params = {};
   params.keyword = paramsHelper.getParams(req.query, 'keyword', "");
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
-  let statusFilter = await ultilsHelper.createFilterStatus(params.currentStatus, 'article');
   params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'ordering');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
   params.categoryId = paramsHelper.getParams(req.session, 'category_id', 'novalue');
+  let statusFilter = await ultilsHelper.createFilterStatus(params, 'article');
 
   params.paginations = {
     totalItems: 1,
@@ -49,7 +47,6 @@ router.get('(/status/:status)?', async (req, res, next) => {
   await articleModel.countItems(params).then((data) => {
     params.paginations.totalItems = data
   });
-
   articleModel.listItems(params)
     .then((items) => {
       res.render(`${folderView}list`, {
@@ -115,7 +112,7 @@ router.post('/changeOrdering', function (req, res, next) {
 
   // use Ajax
   let id = req.body.id;
-	let orderings = req.body.value;
+  let orderings = req.body.value;
 
   articleModel.changeOrdering(orderings, id).then(() => {
     res.json('Cập nhật thành công');
@@ -128,7 +125,7 @@ router.post('/changeType', function (req, res, next) {
   let idType = req.body.idType;
   let nameSelect = req.body.nameSelect;
 
-  articleModel.changeType(nameSelect, id,idType).then(() => {
+  articleModel.changeType(nameSelect, id, idType).then(() => {
     res.send('Cập nhật category thành công');
   });
 });
@@ -156,50 +153,41 @@ router.get('/form(/:id)?', async function (req, res, next) {
 });
 
 // Save
-router.post('/save',
-  // validatorArticle.validator(),
-  (req, res, next) => {
-    uploadThumb(req, res, async function (err) {
-      const errors = validationResult(req);
-      let item = Object.assign(req.body);
-      let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
+router.post('/save', (req, res, next) => {
+  uploadThumb(req, res, async function (errUpload) {
+    let item = Object.assign(req.body);
+    let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
 
-      if (err) {
-        if (err.code == 'LIMIT_FILE_SIZE') err = notify.ERROR_FILE_LIMIT
-        errors.errors.push({ param: 'thumb', msg: err });
-      } else if (req.file == undefined && taskCurrent == 'add') {
-        errors.errors.push({ param: 'thumb', msg: notify.ERROR_FILE_REQUIRE });
-      }
-      // console.log(req.body);
-      // console.log(errors.errors);
-      let params = {};
+    let errors = validatorArticle.validator(req, errUpload, taskCurrent);
+    let params = {};
 
-      if (errors.isEmpty()) {
-        let message = taskCurrent == 'add' ? notify.ADD_SUCCESS : notify.EDIT_SUCCESS;
-        if (req.file == undefined) {
-          item.thumb = item.image_old;
-        } else {
-          item.thumb = req.file.filename;
-          if(taskCurrent == 'edit') {
-            fileHelper.remove('public/uploads/article/',item.image_old);
-          }
-        }
-        articleModel.saveItems(item, taskCurrent).then(() => {
-          req.flash('success', message, false);
-          res.redirect(linkIndex);
-        });
+    if (errors.length <= 0) {
+      let message = taskCurrent == 'add' ? notify.ADD_SUCCESS : notify.EDIT_SUCCESS;
+      if (req.file == undefined) {
+        item.thumb = item.image_old;
       } else {
-        let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
-        await categoryModel.listItemsInSelecbox().then((items) => {
-          params.categoryItems = items;
-          params.categoryItems.unshift({ _id: '', name: 'All category' });
-        });
-        if (taskCurrent == 'edit') item.thumb = item.image_old;
-        res.render(`${folderView}form`, { pageTitle: pageTitle, params, item, errors });
+        item.thumb = req.file.filename;
+        if (taskCurrent == 'edit') {
+          fileHelper.remove('public/uploads/article/', item.image_old);
+        }
       }
-    })
+      articleModel.saveItems(item, taskCurrent).then(() => {
+        req.flash('success', message, false);
+        res.redirect(linkIndex);
+      });
+    } else {
+      let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
+      if(req.file != undefined) fileHelper.remove('public/uploads/article/', req.file.filename); // xóa tấm hình khi form không hợp lệ
+      await categoryModel.listItemsInSelecbox().then((items) => {
+        params.categoryItems = items;
+        params.categoryItems.unshift({ _id: '', name: 'All category' });
+      });
+      if (taskCurrent == 'edit') item.thumb = item.image_old;
+      res.render(`${folderView}form`, { pageTitle: pageTitle, params, item, errors });
+    }
+  })
 
-  });
+});
 
 // Sort
 router.get('/sort/:sort_field/:sort_type', function (req, res, next) {
@@ -212,8 +200,12 @@ router.get('/sort/:sort_field/:sort_type', function (req, res, next) {
 // Filter
 router.get('/filter-category/:category_id', function (req, res, next) {
   req.session.category_id = paramsHelper.getParams(req.params, 'category_id', '');
-
-  res.redirect(linkIndex);
+  let keyword = paramsHelper.getParams(req.query, 'keyword', "");
+  if(keyword) {
+    res.redirect(linkIndex + '?keyword=' + keyword);
+  } else {
+    res.redirect(linkIndex);
+  }
 });
 
 module.exports = router;

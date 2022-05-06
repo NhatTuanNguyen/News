@@ -8,16 +8,16 @@ const folderView = __path_views_blog + 'pages/category/';
 const layoutBlog = __path_views_blog + 'frontend';
 
 /* GET home page. */
-router.get('/:id', async function (req, res, next) {
-  let itemsCategory = [];
+router.get('/:slug', async function (req, res, next) {
   let itemsInCategory = [];
-  let itemsRandom = [];
   let category = [];
-  let idCategory = paramsHelper.getParams(req.params, 'id', '');
-  await categoryModel.listItemsFrontend(null, { task: 'itemsCategory' }).then((items) => {
-    itemsCategory = items
-  });
+  let idCategory =''
+  let slugCategory = paramsHelper.getParams(req.params, 'slug', '');
 
+  await categoryModel.getItemsFromSlug(slugCategory).then((items) => {
+    idCategory = items[0].id
+  });
+  
   await articleModel.listItemsFrontend({ id: idCategory }, { task: 'itemsInCategory' }).then((items) => {
     itemsInCategory = items
   });
@@ -25,18 +25,12 @@ router.get('/:id', async function (req, res, next) {
   await categoryModel.listItemsFrontend({ id: idCategory }, { task: 'category' }).then((items) => {
     category = items
   });
-  // items random
-  await articleModel.listItemsFrontend(null, { task: 'itemsRandom' }).then((items) => {
-    itemsRandom = items
-  });
 
   res.render(`${folderView}index`, {
     layout: layoutBlog,
     top_post: false,
     category,
-    itemsCategory,
     itemsInCategory,
-    itemsRandom,
   });
 });
 

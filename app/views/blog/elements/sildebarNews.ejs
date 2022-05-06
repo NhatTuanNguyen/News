@@ -1,6 +1,7 @@
 <% const folderUpload = '/uploads/article/' %>
 <% include ./../helpers/formatDate %>
 <% include ./../helpers/formatSummary %>
+<% include ./../helpers/convertToSlug %>
 <!-- Latest News Widget -->
 <div class="single-widget-area news-widget mb-30">
     <h4>Random News</h4>
@@ -9,13 +10,13 @@
     <div class="single-blog-post d-flex style-4 mb-30">
         <!-- Blog Thumbnail -->
         <div class="blog-thumbnail">
-            <a href="#"><img src="<%= folderUpload + item.thumb %>" alt=""></a>
+            <a href="/article/<%= convertToSlug(item.category.name) %>/<%= item.slug %>"><img src="<%= folderUpload + item.thumb %>" alt=""></a>
         </div>
 
         <!-- Blog Content -->
         <div class="blog-content">
             <span class="post-date"><%= formatDateHelper(item.created.time) %></span>
-            <a href="#" class="post-title"><%= item.name %></a>
+            <a href="/article/<%= convertToSlug(item.category.name) %>/<%= item.slug %>" class="post-title"><%= item.name %></a>
         </div>
     </div>
     <%}) %> 

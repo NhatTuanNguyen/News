@@ -1,3 +1,5 @@
+<% include ./../helpers/showMenuUser %> 
+
 <!-- Preloader -->
 <div class="preloader d-flex align-items-center justify-content-center">
     <div class="lds-ellipsis">
@@ -36,17 +38,22 @@
                         <!-- Nav Start -->
                         <div class="classynav">
                             <ul>
-                                <li><a href="/">Home</a></li>
-                                <li><a href="#">Catagory</a>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li><a href="#">Danh mục</a>
                                     <ul class="dropdown">
                                         <% itemsCategory.forEach((item) =>{ %>
-                                            <li><a href="/category/<%= item.id %>"><%= item.name %></a></li>
+                                            <li><a href="/category/<%= item.slug %>"><%= item.name %></a></li>
                                         <% }) %>
                                     </ul>
                                 </li>
-                                <li><a href="/about">About</a></li>
-                                <li><a href="/contact">Contact</a></li>
-                                
+                                <li><a href="/contact">Liên hệ</a></li>
+                                <!-- <li><a href="#">Danh mục</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">Danh mục</a></li>
+                                        <li><a href="#">Danh mục</a></li>
+                                    </ul>
+                                </li> -->
+                                <%- showMenuUser(userInfo) %> 
                             </ul>
 
                             <!-- Header Add Area -->

@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('passport')
 const pathConfig = require('./path');
 
 const validator = require('express-validator');
@@ -21,6 +22,7 @@ global.__path_views_admin = __path_views + pathConfig.folder_module_admin + '/';
 global.__path_views_blog = __path_views + pathConfig.folder_module_blog + '/';
 
 global.__path_models = __path_app + pathConfig.folder_models + '/';
+global.__path_middleware = __path_app + pathConfig.folder_middleware + '/';
 global.folder_public = __base + pathConfig.folder_public + '/';
 global.folder_uploads = folder_public + pathConfig.folder_uploads + '/';
 
@@ -41,17 +43,31 @@ async function main() {
   console.log('connect success');
 }
 
-
-
 var app = express();
 app.use(cookieParser());
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
+  cookie:{ 
+    maxAge:5*60*1000
+  }
 }));
+
+require(__path_configs + 'passport')(passport);
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(flash(app,{
   viewName:__path_views_admin + 'flash',
+}));
+
+app.use(validator({
+  customValidators: {
+    isNotEqual: (value1, value2) => {
+      return value1!==value2;
+    }
+  }
 }));
 
 // view engine setup

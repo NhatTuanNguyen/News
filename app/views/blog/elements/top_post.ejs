@@ -1,6 +1,8 @@
 <%
     const folderUpload = './uploads/article/' ;
 %> 
+<% include ./../helpers/convertToSlug %>
+
 
 <!-- ##### Hero Area Start ##### -->
 <div class="hero-area">
@@ -22,7 +24,7 @@
                             <!-- Blog Content -->
                             <div class="blog-content">
                                 <span class="post-date"><%= moment(items[0].created.time).format(systemConfig.formatDayTime) %></span>
-                                <a href="#" class="post-title"><%= items[0].name %></a>
+                                <a href="/article/<%= convertToSlug(items[0].category.name) %>/<%= items[0].slug %>" class="post-title"><%= items[0].name %></a>
                             </div>
                         </div>
                     </div>
@@ -39,7 +41,7 @@
                             <!-- Blog Content -->
                             <div class="blog-content">
                                 <span class="post-date"><%= moment(items[i].created.time).format(systemConfig.formatDayTime) %></span>
-                                <a href="#" class="post-title"><%= items[i].name %></a>
+                                <a href="/article/<%= convertToSlug(items[i].category.name) %>/<%= items[i].slug %>" class="post-title"><%= items[i].name %></a>
                             </div>
                         </div>
                         <% } %> 

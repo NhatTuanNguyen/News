@@ -10,10 +10,13 @@ module.exports = {
     ERROR_NAME: 'Chiều dài từ %d đến %d ký tự',
     ERROR_ORDERING: 'Phải là số nguyên lớn hơn %d và bé hơn %d',
     ERROR_STATUS: 'Phải là một giá trị khác rỗng',
+    ERROR_SPECIAL: 'Phải là một giá trị khác rỗng',
+    ERROR_GROUPACP: 'Phải là một giá trị khác rỗng',
 
     CHANGE_GROUPACP_SUCCESS:'Cập nhật group acp thành công!',
     CHANGE_ORDERING:'Cập nhât ordering thành công!',
     ERROR_FILE_REQUIRE:'Vui lòng chọn file upload',
     ERROR_FILE_LIMIT:'Kích thước file không phù hợp',
     ERROR_FILE_EXTENSION:'Phần mở rộng file không phù hợp',
+    ADD_SUCCESS_FEEDBACK: 'Cảm ơn bạn đã dành thời gian để gửi phản hồi đến chúng tôi',
 };

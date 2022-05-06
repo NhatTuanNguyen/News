@@ -1,5 +1,6 @@
 var Model = require(__path_schemas + 'users');
 const fileHelper = require(__path_helpers + 'file');
+var crypto = require('crypto');
 
 module.exports = {
     listItems: (params) => {
@@ -21,8 +22,19 @@ module.exports = {
         return Model.findById(id);
     },
 
+    getByUsername: (username,options=null) => {
+        if(options == null) {
+            return Model.find({status: 'active',username: username})
+                        .select('username password');
+        }
+    },
+
     countItems: (params) => {
-        return Model.count(params.objWhere)
+        let objWhere = {};
+        if (params.groupId !== "novalue" && params.groupId !== undefined) objWhere['group.id'] = params.groupId;
+        if (params.currentStatus !== 'all' && params.currentStatus !== undefined) objWhere.status = params.currentStatus;
+        if (params.keyword !== "" && params.keyword !== undefined) objWhere.name = new RegExp(params.keyword, 'i');
+        return Model.count(objWhere)
     },
 
     changeStatus: (currentStatus, id, options = 'updateOne') => {
@@ -98,6 +110,7 @@ module.exports = {
     saveItems: (item, options = 'add') => {
 
         if (options == 'add') {
+            item.password = crypto.createHash('md5').update(item.password).digest("hex");
             item.created = {
                 user_id: 0,
                 user_name: 'admin',
@@ -112,6 +125,8 @@ module.exports = {
         } else if (options == 'edit') {
             return Model.updateOne({ _id: item.id }, {
                 name: item.name,
+                username: item.username,
+                password: crypto.createHash('md5').update(item.password).digest("hex"),
                 status: item.status,
                 ordering: parseInt(item.ordering),
                 content: item.content,

@@ -25,7 +25,10 @@ module.exports = {
     },
 
     countItems: (params) => {
-        return Model.count(params.objWhere)
+        let objWhere = {};
+        if (params.currentStatus !== 'all' && params.currentStatus !== undefined) objWhere.status = params.currentStatus;
+        if (params.keyword !== "" && params.keyword !== undefined) objWhere.name = new RegExp(params.keyword, 'i');
+        return Model.count(objWhere)
     },
 
     changeStatus: (currentStatus, id, options = 'updateOne') => {

@@ -1,16 +1,15 @@
-
 <% const folderUpload = '/uploads/article/' %>
 <% include ./../../helpers/formatDate %>
 <% include ./../../helpers/formatSummary %>
+<% include ./../../helpers/convertToSlug %>
 
 <!-- ##### Intro News Area Start ##### -->
-<section class="intro-news-area section-padding-100-0 mb-70">
+<section class="intro-news-area section-padding-50-0 mb-70">
     <div class="container">
         <div class="row justify-content-center">
             <!-- Intro News Tabs Area -->
             <div class="col-12 col-lg-8">
                 <div class="intro-news-tab">
-                    <h3><% JSON.stringify(category) %> </h3>
                     <!-- Intro News Filter -->
                     <div class="intro-news-filter d-flex justify-content-between">
                         <h6><%= category[0].name %></h6>  
@@ -24,13 +23,13 @@
                                     <div class="single-blog-post style-2 mb-5">
                                         <!-- Blog Thumbnail -->
                                         <div class="blog-thumbnail">
-                                            <a href="#"><img src="<%= folderUpload + itemsInCategory[0].thumb%>" alt="Photo"></a>
+                                            <a href="/article/<%= convertToSlug(itemsInCategory[0].category.name) %>/<%= itemsInCategory[0].slug %>"><img src="<%= folderUpload + itemsInCategory[0].thumb%>" alt="Photo"></a>
                                         </div>
 
                                         <!-- Blog Content -->
                                         <div class="blog-content">
                                             <span class="post-date"><%= formatDateHelper(itemsInCategory[0].created.time) %></span>
-                                            <a href="#" class="post-title"><%= itemsInCategory[0].name %></a>
+                                            <a href="/article/<%= convertToSlug(itemsInCategory[0].category.name) %>/<%= itemsInCategory[0].slug %>" class="post-title"><%= itemsInCategory[0].name %></a>
                                             <a href="#" class="post-author mb-30"><%= itemsInCategory[0].created.user_name %></a>
                                             <p><%= formatSummary(itemsInCategory[0].content) %></p>
                                         </div>
@@ -42,14 +41,14 @@
                                         <div class="single-blog-post style-2 mb-5">
                                             <!-- Blog Thumbnail -->
                                             <div class="blog-thumbnail">
-                                                <a href="#"><img src="<%= folderUpload + itemsInCategory[i].thumb%>" alt="Photo"></a>
+                                                <a href="/article/<%= convertToSlug(itemsInCategory[i].category.name) %>/<%= itemsInCategory[i].slug %>"><img src="<%= folderUpload + itemsInCategory[i].thumb%>" alt="Photo"></a>
                                             </div>
     
                                             <!-- Blog Content -->
                                             <div class="blog-content">
                                                 <span class="post-date"><%= formatDateHelper(itemsInCategory[i].created.time) %></span>
-                                                <a href="#" class="post-title"><%= itemsInCategory[i].name %></a>
-                                                <a href="#" class="post-author"><%= itemsInCategory[0].created.user_name %></a>
+                                                <a href="/article/<%= convertToSlug(itemsInCategory[i].category.name) %>/<%= itemsInCategory[i].slug %>" class="post-title"><%= itemsInCategory[i].name %></a>
+                                                <a href="#" class="post-author"><%= itemsInCategory[i].created.user_name %></a>
                                             </div>
                                         </div>
                                     </div>

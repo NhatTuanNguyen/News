@@ -1,6 +1,5 @@
 var express = require('express');
 
-const { body, validationResult } = require('express-validator');
 var router = express.Router();
 
 const util = require('util');
@@ -26,10 +25,10 @@ router.get('(/status/:status)?', async (req, res, next) => {
   let params = {};
   params.keyword = paramsHelper.getParams(req.query, 'keyword', "");
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
-  let statusFilter = await ultilsHelper.createFilterStatus(params.currentStatus, 'users');
   params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'ordering');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
   params.groupId = paramsHelper.getParams(req.session, 'group_id', 'novalue');
+  let statusFilter = await ultilsHelper.createFilterStatus(params, 'users');
 
   params.paginations = {
     totalItems: 1,
@@ -149,23 +148,14 @@ router.get('/form(/:id)?', async function (req, res, next) {
 router.post('/save',
   // validatorUsers.validator(),
   (req, res, next) => {
-    uploadAvatar(req, res, async function (err) {
-      const errors = validationResult(req);
-      // console.log('err '+err);
+    uploadAvatar(req, res, async function (errUpload) {
       let item = Object.assign(req.body);
       let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
 
-      if (err) {
-        if (err.code == 'LIMIT_FILE_SIZE') err = notify.ERROR_FILE_LIMIT
-        errors.errors.push({ param: 'avatar', msg: err });
-      } else if (req.file == undefined && taskCurrent == 'add') {
-        errors.errors.push({ param: 'avatar', msg: notify.ERROR_FILE_REQUIRE });
-      }
-      // console.log(req.body);
-      // console.log(errors.errors);
+      let errors = validatorUsers.validator(req, errUpload, taskCurrent);
       let params = {};
 
-      if (errors.isEmpty()) {
+      if (errors.length <= 0) {
         let message = taskCurrent == 'add' ? notify.ADD_SUCCESS : notify.EDIT_SUCCESS;
         if (req.file == undefined) {
           item.avatar = item.image_old;
@@ -181,6 +171,7 @@ router.post('/save',
         });
       } else {
         let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
+        if(req.file != undefined) fileHelper.remove('public/uploads/users/', req.file.filename); // xóa tấm hình khi form không hợp lệ
         await groupsModel.listItemsInSelecbox().then((items) => {
           params.groupItems = items;
           params.groupItems.unshift({ _id: '', name: 'All group' });

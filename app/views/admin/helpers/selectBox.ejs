@@ -1,8 +1,10 @@
 <% 
 
-selecBoxHelper = (name,items,optionSelected="",addClass='',collection='',id='') => {
+selecBoxHelper = (name,items,optionSelected="",keyword,addClass='',collection='',id='') => {
     const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
-    xhtml = "";
+    let xhtml = "";
+    let key;
+    if(keyword !== "" && keyword !== undefined) key = '?keyword=' + keyword;
 
     items.forEach((item) => {
         let selected = (item.id == optionSelected) ? 'selected="selected"' : '';
@@ -11,7 +13,7 @@ selecBoxHelper = (name,items,optionSelected="",addClass='',collection='',id='') 
     });
     
     if(collection == ''){
-        return `<select name="${name}" class="form-control">${xhtml}</select>`;
+        return `<select data-keyword="${key}" name="${name}" class="form-control">${xhtml}</select>`;
     }
     return `<select data-link="${linkPrefix}" data-id="${id}" name="${name}" class="form-control ${addClass}">${xhtml}</select>`;
 }

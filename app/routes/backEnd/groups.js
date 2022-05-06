@@ -1,5 +1,4 @@
 var express = require('express');
-const { body, validationResult } = require('express-validator');
 var router = express.Router();
 const util = require('util');
 var groupsModel = require(__path_models + 'groups');
@@ -22,9 +21,9 @@ router.get('(/status/:status)?', async (req, res, next) => {
   let params = {};
   params.keyword = paramsHelper.getParams(req.query, 'keyword', "");
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
-  let statusFilter = await ultilsHelper.createFilterStatus(params.currentStatus, 'groups');
   params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'ordering');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
+  let statusFilter = await ultilsHelper.createFilterStatus(params, 'groups');
 
   params.paginations = {
     totalItems: 1,
@@ -40,14 +39,14 @@ router.get('(/status/:status)?', async (req, res, next) => {
   });
 
   groupsModel.listItems(params)
-  .then((items) => {
-    res.render(`${folderView}list`, {
-      pageTitle: 'pageTitleIndex',
-      items: items,
-      statusFilter: statusFilter,
-      params
+    .then((items) => {
+      res.render(`${folderView}list`, {
+        pageTitle: 'pageTitleIndex',
+        items: items,
+        statusFilter: statusFilter,
+        params
+      });
     });
-  });
 
 });
 
@@ -55,7 +54,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 router.get('/changeStatus/:id/:status', function (req, res, next) {
   let currentStatus = paramsHelper.getParams(req.params, 'status', 'active');
   let id = paramsHelper.getParams(req.params, 'id', '');
- 
+
   groupsModel.changeStatus(currentStatus, id).then(() => {
     res.send(currentStatus);
   });
@@ -66,7 +65,7 @@ router.get('/changeGroupAcp/:id/:group_acp', function (req, res, next) {
   let currentGroupAcp = paramsHelper.getParams(req.params, 'group_acp', 'yes');
   let id = paramsHelper.getParams(req.params, 'id', '');
 
-  groupsModel.changeGroupAcp(currentGroupAcp,id).then(()=> {
+  groupsModel.changeGroupAcp(currentGroupAcp, id).then(() => {
     req.flash('success', notify.CHANGE_GROUPACP_SUCCESS, false);
     res.redirect(linkIndex);
   });
@@ -102,10 +101,10 @@ router.post('/delete', function (req, res, next) {
 
 // change ordering
 router.post('/changeOrdering', function (req, res, next) {
- 
+
   // use Ajax
   let id = req.body.id;
-	let orderings = req.body.value;
+  let orderings = req.body.value;
 
   groupsModel.changeOrdering(orderings, id).then(() => {
     res.json('Cập nhật thành công');
@@ -128,29 +127,29 @@ router.get('/form(/:id)?', function (req, res, next) {
 });
 
 // Save
-router.post('/save',validatorGroups.validator(),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    let item = Object.assign(req.body);
-    let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit':'add';
+router.post('/save', (req, res, next) => {
+  validatorGroups.validator(req);
+  let item = Object.assign(req.body);
+  let errors = req.validationErrors();
+  let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
 
-    if (errors.isEmpty()) {
-      let message = taskCurrent == 'add' ? notify.ADD_SUCCESS:notify.EDIT_SUCCESS;
-      groupsModel.saveItems(item, taskCurrent).then(() => {
-        if (taskCurrent == 'add') {
-          req.flash('success', message, false);
+  if (!errors) {
+    let message = taskCurrent == 'add' ? notify.ADD_SUCCESS : notify.EDIT_SUCCESS;
+    groupsModel.saveItems(item, taskCurrent).then(() => {
+      if (taskCurrent == 'add') {
+        req.flash('success', message, false);
+        res.redirect(linkIndex);
+      } else {
+        usersModel.saveItems(item, 'changeGroupName').then(() => {
+          req.flash('success', notify.EDIT_SUCCESS, false);
           res.redirect(linkIndex);
-        } else {
-          usersModel.saveItems(item, 'changeGroupName').then(() => {
-            req.flash('success', notify.EDIT_SUCCESS, false);
-            res.redirect(linkIndex);
-          });
-        }
-      });
-    } else {
-      let pageTitle = taskCurrent == 'add' ? pageTitleAdd:pageTitleEdit;
-      res.render(`${folderView}form`, { pageTitle: pageTitle, item, errors });
-    }
+        });
+      }
+    });
+  } else {
+    let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
+    res.render(`${folderView}form`, { pageTitle: pageTitle, item, errors });
+  }
 });
 
 router.get('/sort/:sort_field/:sort_type', function (req, res, next) {

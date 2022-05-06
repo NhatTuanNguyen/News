@@ -27,6 +27,7 @@ module.exports = {
             find = {status: 'active'};
             sort = {ordering: 'asc'}
         } else if (options.task == 'itemsCategory') {
+            select = 'name slug';
             find = {status: 'active'};
             sort = {ordering: 'asc'}
         } else if (options.task == 'category') {
@@ -44,8 +45,15 @@ module.exports = {
         return Model.findById(id);
     },
 
+    getItemsFromSlug: (slug) => {
+        return Model.find({ slug: slug});
+    },
+
     countItems: (params) => {
-        return Model.count(params.objWhere)
+        let objWhere = {};
+        if (params.currentStatus !== 'all' && params.currentStatus !== undefined) objWhere.status = params.currentStatus;
+        if (params.keyword !== "" && params.keyword !== undefined) objWhere.name = new RegExp(params.keyword, 'i');
+        return Model.count(objWhere)
     },
 
     changeStatus: (currentStatus, id, options = 'updateOne') => {

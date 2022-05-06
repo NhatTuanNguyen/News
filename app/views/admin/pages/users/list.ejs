@@ -94,7 +94,9 @@
 						</td>
 
 						<td class="text-center"><%= index+1 %></td>
-						<td class="text-center"><%- highlightHelper(item.name, params.keyword) %></td>
+						<td class="text-center" style="white-space: normal;">
+							<%- highlightHelper(item.name, params.keyword) %>
+						</td>
 
                         <td class="text-center">
                             <%- imgHelper(folderUpload,item.avatar) %>
@@ -105,13 +107,13 @@
 						</td>
 						
 						<td class="text-center">
-							<input type="number" onclick="changeOrdering(this)" data-link="<%= linkPrefix %>changeOrdering/" 
+							<input style="width: 72px;" type="number" onclick="changeOrdering(this)" data-link="<%= linkPrefix %>changeOrdering/" 
 							data-id = "<%= item.id %>" class="text-center ordering" value="<%= item.ordering %>"/>
 						</td>
 
                         <td class="text-center">
 							<%# params.groupItems.shift() %>
-							<%- selecBoxHelper('',params.groupItems,item.group.id,'changeType',collection,item.id) %>
+							<%- selecBoxHelper('',params.groupItems,item.group.id,'','changeType',collection,item.id) %>
 						</td>
 						
 						<td class="text-center">

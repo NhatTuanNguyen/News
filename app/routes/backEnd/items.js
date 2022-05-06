@@ -21,9 +21,9 @@ router.get('(/status/:status)?', async (req, res, next) => {
   let params = {};
   params.keyword = paramsHelper.getParams(req.query, 'keyword', "");
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
-  let statusFilter = await ultilsHelper.createFilterStatus(params.currentStatus, 'items');
   params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'ordering');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
+  let statusFilter = await ultilsHelper.createFilterStatus(params, 'items');
 
   params.paginations = {
     totalItems: 1,
@@ -54,7 +54,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 router.get('/changeStatus/:id/:status', function (req, res, next) {
   let currentStatus = paramsHelper.getParams(req.params, 'status', 'active');
   let id = paramsHelper.getParams(req.params, 'id', '');
-  
+
   itemsModel.changeStatus(currentStatus, id).then(() => {
     res.send(currentStatus);
   });
@@ -100,7 +100,7 @@ router.post('/changeOrdering', function (req, res, next) {
 
   // use Ajax
   let id = req.body.id;
-	let orderings = req.body.value;
+  let orderings = req.body.value;
 
   itemsModel.changeOrdering(orderings, id).then(() => {
     res.json('Cập nhật thành công');
@@ -123,25 +123,22 @@ router.get('/form(/:id)?', function (req, res, next) {
 });
 
 // Save
-router.post('/save',
-  validatorItems.validator(),
-  (req, res, next) => {
-    
-    const errors = validationResult(req);
-    let item = Object.assign(req.body);
-    let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit':'add';
+router.post('/save', (req, res, next) => {
+  let errors = validatorItems.validator(req);
+  let item = Object.assign(req.body);
+  let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
 
-    if (errors.isEmpty()) {
-      let message = taskCurrent == 'add' ? notify.ADD_SUCCESS:notify.EDIT_SUCCESS;
-      itemsModel.saveItems(item, taskCurrent).then(() => {
-        req.flash('success', message, false);
-        res.redirect(linkIndex);
-      });
-    } else {
-      let pageTitle = taskCurrent == 'add' ? pageTitleAdd:pageTitleEdit;
-      res.render(`${folderView}form`, { pageTitle: pageTitle, item, errors });
-    }
-  });
+  if (errors.length <= 0) {
+    let message = taskCurrent == 'add' ? notify.ADD_SUCCESS : notify.EDIT_SUCCESS;
+    itemsModel.saveItems(item, taskCurrent).then(() => {
+      req.flash('success', message, false);
+      res.redirect(linkIndex);
+    });
+  } else {
+    let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
+    res.render(`${folderView}form`, { pageTitle: pageTitle, item, errors });
+  }
+});
 
 router.get('/sort/:sort_field/:sort_type', function (req, res, next) {
   req.session.sort_field = paramsHelper.getParams(req.params, 'sort_field', 'ordering');

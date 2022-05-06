@@ -71,6 +71,24 @@ $(document).ready(function (e) {
         });
     }
 
+    // Active menu
+    var url = window.location.href;
+    $("li.nav-item a").each(function() {
+        let urlSplit = url.split("/");
+        urlHrefSplit =this.href.split('/');
+        if(urlSplit[4] == (urlHrefSplit[4])) { 
+            $(this).addClass("active");
+            $(this).parents('li').eq(1).addClass("menu-open");
+            $(this).parents('li').eq(1).find('a.nav-link:first').addClass("active");
+            $(this).closest('ul').css('display', 'block');
+        }
+    });
+    $("li:not(.nav-item) a").each(function() {
+        if(url == (this.href)) { 
+            $(this).addClass("active");
+        }
+    });
+
     // convert to slug
     const convertToSlug = function (str) {
         let slug
@@ -125,7 +143,11 @@ $(document).ready(function (e) {
 
     $('select[name="filter_category"]').change(function () {
         var path = window.location.pathname.split('/');
+        let keyword = $(this).attr('data-link');
         var linkRedirect = '/' + path[1] + '/' + path[2] + '/filter-category/' + $(this).val();
+        if (keyword) {
+            linkRedirect = '/' + path[1] + '/' + path[2] + '/filter-category/' + $(this).val() + keyword;  
+        } 
         window.location.pathname = linkRedirect;
     });
 
@@ -137,13 +159,13 @@ $(document).ready(function (e) {
             const icon = changeStatusElement.find('i');
             const link = changeStatusElement.attr('href');
             const arrStatus = link.split("/");
-            const id = arrStatus[3];
-            const currentStatus = arrStatus[4];
+            // const id = arrStatus[3];
+            // const currentStatus = arrStatus[4];
             console.log(changeStatusElement.find('i'));
             $.ajax({
                 type: "get",
                 url: link,
-                data: { id, currentStatus },
+                data: {},
                 dataType: "text",
                 success: function (response) {
                     if (response == "active") {
@@ -179,11 +201,13 @@ $(document).ready(function (e) {
 
     // Change category or group
     $(".changeType").change(function (e) {
+        console.log('1');
         e.preventDefault();
         const id = $(this).attr('data-id');
         const idType = $(this).val();
         const nameSelect = $(this).find(`option[value="${idType}"]`).text();
         const link = $(this).attr('data-link') + 'changeType';
+        console.log(id,idType,nameSelect,link);
         $.ajax({
             type: "post",
             url: link,
