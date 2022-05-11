@@ -2,7 +2,6 @@ let linkLogin = `/auth/login`;
 let linkNoPermission = `/auth/no-permission`;
 
 module.exports = (req, res,next) => {
-    console.log(req.user);
   // console.log(req.isAuthenticated(),req.user);
   if(req.isAuthenticated()) {
       if(req.user.username == 'admin') {

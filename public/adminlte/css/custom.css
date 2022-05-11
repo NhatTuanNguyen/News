@@ -73,5 +73,7 @@ span.highlight {
   }
 
 .img-avatar-form {
-    width:70px
+    width:70px;
+    padding-top:12px;
+    padding-left: 8px;
 }

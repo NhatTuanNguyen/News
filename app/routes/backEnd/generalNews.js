@@ -1,18 +1,18 @@
 var express = require('express');
 var router = express.Router();
 const util = require('util');
-var itemsModel = require(__path_models + 'items');
+var generalNewsModel = require(__path_models + 'generalNews');
 const ultilsHelper = require(__path_helpers + 'ultils');
 const paramsHelper = require(__path_helpers + 'Params');
-const validatorItems = require(__path_validators + 'items');
+const validatorItems = require(__path_validators + 'generalNews');
 var systemConfig = require(__path_configs + 'system');
 var notify = require(__path_configs + 'notify');
-let linkIndex = `/${systemConfig.prefixAdmin}/items`;
+let linkIndex = `/${systemConfig.prefixAdmin}/general-news`;
 
-const pageTitleIndex = 'Item Management';
+const pageTitleIndex = 'General News';
 const pageTitleAdd = pageTitleIndex + ' - Add';
 const pageTitleEdit = pageTitleIndex + ' - Edit';
-const folderView = __path_views_admin + 'pages/items/'
+const folderView = __path_views_admin + 'pages/generalNews/'
 
 /* GET users listing. */
 router.get('(/status/:status)?', async (req, res, next) => {
@@ -20,9 +20,9 @@ router.get('(/status/:status)?', async (req, res, next) => {
   let params = {};
   params.keyword = paramsHelper.getParams(req.query, 'keyword', "");
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
-  params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'name');
+  params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'link');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
-  let statusFilter = await ultilsHelper.createFilterStatus(params, 'items');
+  let statusFilter = await ultilsHelper.createFilterStatus(params, 'generalNews');
 
   params.paginations = {
     totalItems: 1,
@@ -33,11 +33,11 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
   params.paginations.currentPage = parseInt(paramsHelper.getParams(req.query, 'page', 1));
 
-  await itemsModel.countItems(params).then((data) => {
+  await generalNewsModel.countItems(params).then((data) => {
     params.paginations.totalItems = data
   });
 
-  itemsModel.listItems(params)
+  generalNewsModel.listItems(params)
     .then((items) => {
       res.render(`${folderView}list`, {
         pageTitle: 'pageTitleIndex',
@@ -54,7 +54,7 @@ router.get('/changeStatus/:id/:status', function (req, res, next) {
   let currentStatus = paramsHelper.getParams(req.params, 'status', 'active');
   let id = paramsHelper.getParams(req.params, 'id', '');
 
-  itemsModel.changeStatus(currentStatus, id).then(() => {
+  generalNewsModel.changeStatus(currentStatus, id).then(() => {
     res.send(currentStatus);
   });
 });
@@ -63,7 +63,7 @@ router.get('/changeStatus/:id/:status', function (req, res, next) {
 router.post('/changeStatus/:status', function (req, res, next) {
   let currentStatus = paramsHelper.getParams(req.params, 'status', 'active');
 
-  itemsModel.changeStatus(currentStatus, req.body.cid, 'updateMutiple').then((result) => {
+  generalNewsModel.changeStatus(currentStatus, req.body.cid, 'updateMutiple').then((result) => {
     req.flash('success', util.format(notify.CHANGE_STATUS_MULTI_SUCCESS, result.matchedCount), false);
     res.redirect(linkIndex);
   });
@@ -73,7 +73,7 @@ router.post('/changeStatus/:status', function (req, res, next) {
 router.get('/delete/:id', function (req, res, next) {
   let id = paramsHelper.getParams(req.params, 'id', '');
 
-  itemsModel.deleteItems(id).then(() => {
+  generalNewsModel.deleteItems(id).then(() => {
     req.flash('success', notify.DELETE_SUCCESS, false);
     res.redirect(linkIndex);
   });
@@ -81,7 +81,7 @@ router.get('/delete/:id', function (req, res, next) {
 
 // delete multiple items
 router.post('/delete', function (req, res, next) {
-  itemsModel.deleteItems(req.body.cid, 'deleteMutiple').then(() => {
+  generalNewsModel.deleteItems(req.body.cid, 'deleteMutiple').then(() => {
     req.flash('success', notify.DELETE_MULTI_SUCCESS, false);
     res.redirect(linkIndex);
   });
@@ -89,19 +89,11 @@ router.post('/delete', function (req, res, next) {
 
 // change ordering
 router.post('/changeOrdering', function (req, res, next) {
-  // let cids = req.body.cid;
-  // let orderings = req.body.ordering;
-
-  // itemsModel.changeOrdering(orderings, cids).then(() => {
-  //   req.flash('success', notify.CHANGE_ORDERING, false);
-  //   res.redirect(linkIndex);
-  // });
-
   // use Ajax
   let id = req.body.id;
   let orderings = req.body.value;
 
-  itemsModel.changeOrdering(orderings, id).then(() => {
+  generalNewsModel.changeOrdering(orderings, id).then(() => {
     res.json('Cập nhật thành công');
   });
 });
@@ -115,7 +107,7 @@ router.get('/form(/:id)?', function (req, res, next) {
   if (id === '') {//ADD
     res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors });
   } else {//EDIT
-    itemsModel.getItems(id).then((item) => {
+    generalNewsModel.getItems(id).then((item) => {
       res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors });
     });
   }
@@ -129,7 +121,7 @@ router.post('/save', (req, res, next) => {
 
   if (errors.length <= 0) {
     let message = taskCurrent == 'add' ? notify.ADD_SUCCESS : notify.EDIT_SUCCESS;
-    itemsModel.saveItems(item, taskCurrent).then(() => {
+    generalNewsModel.saveItems(item, taskCurrent).then(() => {
       req.flash('success', message, false);
       res.redirect(linkIndex);
     });

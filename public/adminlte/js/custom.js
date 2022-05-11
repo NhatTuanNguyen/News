@@ -127,6 +127,25 @@ $(document).ready(function (e) {
         $('input[name="slug"]').val(Text);
     });
 
+    if($('input[name="source"]').length != 0) {
+        $('input[name="source"]').keyup(function () {
+            let TextSource ='';
+            let TextCategory =$('input[name="category"]').val();
+            TextCategory =convertToSlug(TextCategory);
+            TextSource = $(this).val();
+            TextSource = convertToSlug(TextSource);
+            $('input[name="slug"]').val(TextCategory+'-'+TextSource);
+        });
+        $('input[name="category"]').keyup(function () {
+            let TextSource =$('input[name="source"]').val();
+            let TextCategory ='';
+            TextSource =convertToSlug(TextSource);
+            TextCategory = $(this).val();
+            TextCategory = convertToSlug(TextCategory);
+            $('input[name="slug"]').val(TextCategory+'-'+TextSource);
+        });
+    }
+
     $('select[name="group_id"]').change(function () {
         $('input[name="group_name"]').val($(this).find('option:selected').text());
     });
@@ -228,8 +247,8 @@ $(document).ready(function (e) {
         });
     });
 
-    $('input[name="thumb"').change(function (event) {
-        const output = $(this).closest('div').find('#previewImg')[0];
+    $('input[name="thumb"],input[name="logo"],input[name="avatar"]').change(function (event) {
+        const output = $(this).closest('div').find('.img-avatar-form')[0];
         output.src = URL.createObjectURL(event.target.files[0]);
         output.onload = function () {
             URL.revokeObjectURL(output.src) // free memory

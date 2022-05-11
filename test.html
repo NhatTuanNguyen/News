@@ -3,3 +3,17 @@
     <textarea class="form-control" name="content" rows="2"
         id="content_ck"><%= item.content %> </textarea>
 </div>
+let coin = await rp({
+    method: 'GET',
+    uri: 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+    qs:{
+      'start':'1',
+      'limit':'2',
+      'convert':'USD'
+    },
+    headers: {
+      'X-CMC_PRO_API_KEY': 'af236d21-5c29-4e32-9397-f7bfa6e7bf23',
+    },
+    json: true,
+    gzip:true
+  });

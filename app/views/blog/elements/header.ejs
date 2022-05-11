@@ -1,4 +1,7 @@
 <% include ./../helpers/showMenuUser %> 
+<%
+    const folderUpload = './uploads/logo/' ;
+%>
 
 <!-- Preloader -->
 <div class="preloader d-flex align-items-center justify-content-center">
@@ -20,7 +23,7 @@
                 <nav class="classy-navbar justify-content-between" id="newsboxNav">
 
                     <!-- Nav brand -->
-                    <a href="index.html" class="nav-brand"><img src="/newsbox/img/core-img/logo.png" alt=""></a>
+                    <a href="/" class="nav-brand"><img src="<%= folderUpload %><%= itemSettings.logo %>" alt="<%= folderUpload %><%= itemSettings.logo %>"></a>
 
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">
@@ -43,6 +46,13 @@
                                     <ul class="dropdown">
                                         <% itemsCategory.forEach((item) =>{ %>
                                             <li><a href="/category/<%= item.slug %>"><%= item.name %></a></li>
+                                        <% }) %>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Tin tức tổng hợp</a>
+                                    <ul class="dropdown">
+                                        <% generalNewsCategory.forEach((item) =>{ %>
+                                            <li><a href="/general-news/<%= item.slug %>"><%= item.category %></a></li>
                                         <% }) %>
                                     </ul>
                                 </li>

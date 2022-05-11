@@ -12,6 +12,7 @@ module.exports = {
     ERROR_STATUS: 'Phải là một giá trị khác rỗng',
     ERROR_SPECIAL: 'Phải là một giá trị khác rỗng',
     ERROR_GROUPACP: 'Phải là một giá trị khác rỗng',
+    ERROR_NOTEMPTY: 'Phải là một giá trị khác rỗng',
 
     CHANGE_GROUPACP_SUCCESS:'Cập nhật group acp thành công!',
     CHANGE_ORDERING:'Cập nhât ordering thành công!',
