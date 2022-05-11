@@ -5,5 +5,6 @@ module.exports = async (req, res, next) => {
     await articleModel.listItemsFrontend(null, { task: 'itemsRandom' }).then((items) => {
         res.locals.itemsRandom = items
     });
+
     next();
 }
