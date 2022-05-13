@@ -22,13 +22,13 @@
                                     <div class="single-blog-post style-2 mb-5">
                                         <!-- Blog Thumbnail -->
                                         <div class="blog-thumbnail">
-                                            <a href="<%= items[0].link %>"><img src="<%= items[0].linkImage %>" alt="Photo"></a>
+                                            <a href="<%= items[0].link %>" target="_blank"><img src="<%= items[0].linkImage %>" alt="Photo"></a>
                                         </div>
 
                                         <!-- Blog Content -->
                                         <div class="blog-content">
                                             <span class="post-date"><%= formatDateHelper(items[0].isoDate) %></span>
-                                            <a href="<%= items[0].link %>" class="post-title"><%= items[0].title %></a>
+                                            <a href="<%= items[0].link %>" target="_blank" class="post-title"><%= items[0].title %></a>
                                             <p><%= formatSummary(items[0].contentSnippet) %></p>
                                         </div>
                                     </div>
@@ -39,13 +39,13 @@
                                         <div class="single-blog-post style-2 mb-5">
                                             <!-- Blog Thumbnail -->
                                             <div class="blog-thumbnail">
-                                                <a href="<%= items[i].link %>"><img src="<%= items[i].linkImage %>" alt="Photo"></a>
+                                                <a href="<%= items[i].link %>" target="_blank"><img src="<%= items[i].linkImage %>" alt="Photo"></a>
                                             </div>
     
                                             <!-- Blog Content -->
                                             <div class="blog-content">
                                                 <span class="post-date"><%= formatDateHelper(items[i].isoDate) %></span>
-                                                <a href="<%= items[i].link %>" class="post-title"><%= items[i].title %></a>
+                                                <a href="<%= items[i].link %>" target="_blank" class="post-title"><%= items[i].title %></a>
                                             </div>
                                         </div>
                                     </div>

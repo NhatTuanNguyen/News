@@ -16,7 +16,7 @@ router.use('/',
     require('./home'));
 router.use('/category', require('./category'));
 router.use('/post', require('./post'));
-router.use('/contact', require('./contact'));
+router.use('/lien-he', require('./contact'));
 router.use('/article', require('./article'));
 router.use('/general-news', require('./generalNews'));
 

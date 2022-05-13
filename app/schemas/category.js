@@ -6,6 +6,10 @@ const schema = new mongoose.Schema({
     ordering: Number,
     content: String,
     slug:String,
+    category: {
+        id: String,
+        name: String,
+    },
     created: {
         user_id: Number, 
         user_name: String,

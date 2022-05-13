@@ -37,7 +37,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
   };
 
 
-  await categoryModel.listItemsInSelecbox().then((items) => {
+  await categoryModel.listItemsCategoryArticle().then((items) => {
     params.categoryItems = items;
     params.categoryItems.unshift({ _id: '', name: 'All category' })
   });
@@ -136,7 +136,7 @@ router.get('/form(/:id)?', async function (req, res, next) {
   let item = { name: '', ordering: 0, status: 'novalue' };
   let errors = null;
   let params = {};
-  await categoryModel.listItemsInSelecbox().then((items) => {
+  await categoryModel.listItemsCategoryArticle().then((items) => {
     params.categoryItems = items;
     params.categoryItems.unshift({ _id: '', name: 'Choose category' })
   });
@@ -178,7 +178,7 @@ router.post('/save', (req, res, next) => {
     } else {
       let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
       if(req.file != undefined) fileHelper.remove('public/uploads/article/', req.file.filename); // xóa tấm hình khi form không hợp lệ
-      await categoryModel.listItemsInSelecbox().then((items) => {
+      await categoryModel.listItemsCategoryArticle().then((items) => {
         params.categoryItems = items;
         params.categoryItems.unshift({ _id: '', name: 'All category' });
       });

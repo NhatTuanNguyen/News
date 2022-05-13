@@ -27,8 +27,12 @@ module.exports = {
             find = {status: 'active'};
             sort = {ordering: 'asc'}
         } else if (options.task == 'itemsCategory') {
-            select = 'name slug';
+            select = 'name slug id category';
             find = {status: 'active'};
+            sort = {ordering: 'asc'}
+        }else if (options.task == 'itemsCategoryParent') {
+            select = 'name slug';
+            find = {status: 'active','category.id':1};
             sort = {ordering: 'asc'}
         } else if (options.task == 'category') {
             find = {status: 'active'};
@@ -39,6 +43,14 @@ module.exports = {
 
     listItemsInSelecbox: () => {
         return Model.find({}, { name: 1, _id: 1 });
+    },
+
+    listItemsCategoryParent: () => {
+        return Model.find({'category.id':1}, { name: 1, _id: 1 });
+    },
+
+    listItemsCategoryArticle: () => {
+        return Model.find({'category.id':'627bd870350f5cf79affc717'}, { name: 1, _id: 1 });
     },
 
     getItems: (id) => {
@@ -87,6 +99,21 @@ module.exports = {
         return Model.updateOne({ _id: cids }, data);
     },
 
+    changeType: (nameSelect, id,idType, options = 'updateOne') => {
+        let data = {
+            category: {
+                id: idType,
+                name: nameSelect,
+            },
+            modified: {
+                user_id: 0,
+                user_name: 'admin',
+                time: Date.now(),
+            }
+        }
+        return Model.updateOne({ _id: id }, data);
+    },
+
     deleteItems: (id, options = 'deleteOne') => {
 
         if (options == 'deleteOne') {
@@ -104,6 +131,10 @@ module.exports = {
                 user_name: 'admin',
                 time: Date.now(),
             };
+            item.category = {
+                id: item.category_id,
+                name: item.category_name,
+            };
             item.slug = convertToSlugHelper.convertToSlug(item.slug);
             return new Model(item).save();
 
@@ -114,6 +145,10 @@ module.exports = {
                 ordering: parseInt(item.ordering),
                 content: item.content,
                 slug: convertToSlugHelper.convertToSlug(item.slug),
+                category: {
+                    id: item.category_id,
+                    name: item.category_name,
+                },
                 modified: {
                     user_id: 0,
                     user_name: 'admin',

@@ -1,20 +1,19 @@
 <% 
-
-selecBoxHelper = (name,items,optionSelected="",keyword,addClass='',collection='',id='') => {
+selecBoxHelper = (name,categoryItems,optionSelected="",keyword,addClass='',collection='',idItem='') => {
     const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
     let xhtml = "";
     let key;
     if(keyword !== "" && keyword !== undefined) key = '?keyword=' + keyword;
 
-    items.forEach((item) => {
+    categoryItems.forEach((item) => {
         let selected = (item.id == optionSelected) ? 'selected="selected"' : '';
         let id = (item.id == undefined) ? 'novalue':item.id;
-        xhtml += `<option value="${id}" ${selected}>${item.name}</option>`
+        if (item.id !== idItem) xhtml += `<option value="${id}" ${selected}>${item.name}</option>`
     });
     
     if(collection == ''){
         return `<select data-keyword="${key}" name="${name}" class="form-control">${xhtml}</select>`;
     }
-    return `<select data-link="${linkPrefix}" data-id="${id}" name="${name}" class="form-control ${addClass}">${xhtml}</select>`;
+    return `<select data-link="${linkPrefix}" data-id="${idItem}" name="${name}" class="form-control ${addClass}">${xhtml}</select>`;
 }
 %>

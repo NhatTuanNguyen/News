@@ -1,6 +1,7 @@
 <% include ./../helpers/showMenuUser %> 
+<% include ./../helpers/loadMenu %> 
 <%
-    const folderUpload = './uploads/logo/' ;
+    const folderUpload = '/uploads/logo/' ;
 %>
 
 <!-- Preloader -->
@@ -42,27 +43,7 @@
                         <div class="classynav">
                             <ul>
                                 <li><a href="/">Trang chủ</a></li>
-                                <li><a href="#">Danh mục</a>
-                                    <ul class="dropdown">
-                                        <% itemsCategory.forEach((item) =>{ %>
-                                            <li><a href="/category/<%= item.slug %>"><%= item.name %></a></li>
-                                        <% }) %>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Tin tức tổng hợp</a>
-                                    <ul class="dropdown">
-                                        <% generalNewsCategory.forEach((item) =>{ %>
-                                            <li><a href="/general-news/<%= item.slug %>"><%= item.category %></a></li>
-                                        <% }) %>
-                                    </ul>
-                                </li>
-                                <li><a href="/contact">Liên hệ</a></li>
-                                <!-- <li><a href="#">Danh mục</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Danh mục</a></li>
-                                        <li><a href="#">Danh mục</a></li>
-                                    </ul>
-                                </li> -->
+                                <%- loadMenu(itemsCategory) %> 
                                 <%- showMenuUser(userInfo) %> 
                             </ul>
 

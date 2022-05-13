@@ -5,6 +5,7 @@
 <% include ./../../helpers/highlight %>
 <% include ./../../helpers/sourceBy %>
 <% include ./../../helpers/sort %>
+<% include ./../../helpers/selectBox %>
 <% 
 	const collection = "category";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
@@ -65,9 +66,10 @@
 							</div>
 						</th>
 						<th class="text-center">#</th>
-						<%- sortHelper(linkPrefix,'Name','name',params.sortField,params.sortType,'with:20%') %> 
+						<%- sortHelper(linkPrefix,'Name','name',params.sortField,params.sortType,'width:20%') %> 
                         <%- sortHelper(linkPrefix,'Status','status',params.sortField,params.sortType) %> 
                         <%- sortHelper(linkPrefix,'Ordering','ordering',params.sortField,params.sortType) %> 
+                        <%- sortHelper(linkPrefix,'Category','category.name',params.sortField,params.sortType) %> 
                         <th class="text-center">Slug</th>
                         <th class="text-center">Created</th>
                         <th class="text-center">Modified</th>
@@ -96,6 +98,11 @@
 						<td class="text-center">
 							<input style="width: 72px;" type="number" onclick="changeOrdering(this)" data-link="<%= linkPrefix %>changeOrdering/" 
 							data-id = "<%= item.id %>" class="text-center ordering" value="<%= item.ordering %>"/>
+						</td>
+
+						<td class="text-center">
+							<%# params.categoryItems.shift() %>
+							<%- selecBoxHelper('',params.categoryItems,item.category.id,'','changeType',collection,item.id) %>
 						</td>
 
                         <td class="text-center"><%= item.slug %></td>

@@ -20,7 +20,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
   let params = {};
   params.keyword = paramsHelper.getParams(req.query, 'keyword', "");
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
-  params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'ordering');
+  params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'name');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
   let statusFilter = await ultilsHelper.createFilterStatus(params, 'category');
 
@@ -30,6 +30,11 @@ router.get('(/status/:status)?', async (req, res, next) => {
     currentPage: 1,
     pageRanges: 3,
   };
+
+  await categoryModel.listItemsCategoryParent().then((items) => {
+    params.categoryItems = items;
+    params.categoryItems.unshift({ id: 1, name: 'Parrent category' })
+  });
 
   params.paginations.currentPage = parseInt(paramsHelper.getParams(req.query, 'page', 1));
 
@@ -99,26 +104,46 @@ router.post('/changeOrdering', function (req, res, next) {
   });
 });
 
+// change category
+router.post('/changeType', function (req, res, next) {
+  let id = req.body.id;
+  let idType = req.body.idType;
+  let nameSelect = req.body.nameSelect;
+
+  categoryModel.changeType(nameSelect, id, idType).then(() => {
+    res.send('Cập nhật category thành công');
+  });
+});
+
 // Form
-router.get('/form(/:id)?', function (req, res, next) {
+router.get('/form(/:id)?', async function (req, res, next) {
   let id = paramsHelper.getParams(req.params, 'id', '');
   let item = { name: '', ordering: 0, status: 'novalue' };
   let errors = null;
+  let params = {};
+
+  await categoryModel.listItemsCategoryParent().then((items) => {
+    params.categoryItems = items;
+    params.categoryItems.unshift({ id: 1, name: 'Parrent category' })
+  });
 
   if (id === '') {//ADD
-    res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors });
+    res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors,params });
   } else {//EDIT
     categoryModel.getItems(id).then((item) => {
-      res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors });
+      item.category_id = item.category.id;
+      item.category_name = item.category.name;
+      res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors,params });
     });
   }
 });
 
 // Save
-router.post('/save', (req, res, next) => {
+router.post('/save', async (req, res, next) => {
   validatorCategory.validator(req);
 	let item = Object.assign(req.body);
 	let errors = req.validationErrors();
+  let params = {};
   
   let taskCurrent = (typeof item !== 'undefined' && item.id !== "") ? 'edit' : 'add';
   if (!errors) {
@@ -129,7 +154,11 @@ router.post('/save', (req, res, next) => {
     });
   } else {
     let pageTitle = taskCurrent == 'add' ? pageTitleAdd : pageTitleEdit;
-    res.render(`${folderView}form`, { pageTitle: pageTitle, item, errors });
+    await categoryModel.listItemsCategoryParent().then((items) => {
+      params.categoryItems = items;
+      params.categoryItems.unshift({ id: 1, name: 'Parrent category' })
+    });
+    res.render(`${folderView}form`, { pageTitle: pageTitle, item, errors,params });
   }
 });
 
@@ -139,5 +168,6 @@ router.get('/sort/:sort_field/:sort_type', function (req, res, next) {
 
   res.redirect(linkIndex);
 });
+
 
 module.exports = router;

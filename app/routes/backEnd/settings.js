@@ -20,7 +20,9 @@ router.get('/', async function (req, res, next) {
     item = itemModel[0]
   });
   let errors = null;
-  
+  if(item === undefined) {
+    item = {media: [{}]};
+  }
   res.render(`${folderView}index`, { pageTitle: pageTitleSettings,item, errors });
 });
 
@@ -30,10 +32,15 @@ router.post('/save', (req, res, next) => {
   uploadLogo(req, res, async function (errUpload) {
     let item = Object.assign(req.body);
     await settingsModel.getItem().then((itemModel) => {
-      item.id = itemModel[0].id;
       data = itemModel
     });
-    let taskCurrent = (data.length > 0) ? 'edit' : 'add';
+    if(data.length > 0) {
+      item.id = data[0].id;
+      taskCurrent = 'edit';
+    } else {
+      taskCurrent = 'add';
+    }
+    // let taskCurrent = (data.length > 0) ? 'edit' : 'add';
     let errors = validatorSettings.validator(req, errUpload,taskCurrent);
 
     if (errors.length <= 0) {
@@ -52,6 +59,7 @@ router.post('/save', (req, res, next) => {
     } else {
       if(req.file != undefined) fileHelper.remove('public/uploads/logo/', req.file.filename); // xóa tấm hình khi form không hợp lệ
       if (taskCurrent == 'edit') item.logo = item.image_old;
+      if (taskCurrent == 'add') item.media = [item.media];
       res.render(`${folderView}index`, { pageTitle: pageTitleSettings, item, errors });
     }
   })
