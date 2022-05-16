@@ -9,9 +9,7 @@ const pathConfig = require('./path');
 const validator = require('express-validator');
 
 // define path
-// console.log(process.cwd());
-// console.log(process.cwd());
-global.__base = process.cwd() + '/';
+global.__base = __dirname + '/';
 global.__path_app = __base + pathConfig.folder_app + '/';
 global.__path_configs = __path_app + pathConfig.folder_configs + '/';
 global.__path_helpers = __path_app + pathConfig.folder_helpers + '/';
@@ -73,7 +71,7 @@ app.use(validator({
 }));
 
 // view engine setup
-app.set('views', path.join(process.cwd(), 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', __path_views_admin + 'backend');
@@ -82,7 +80,7 @@ app.set('layout', __path_views_admin + 'backend');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.locals.systemConfig = systemConfig;
 app.locals.moment = moment;
