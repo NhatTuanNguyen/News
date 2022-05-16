@@ -9,8 +9,8 @@ const pathConfig = require('./path');
 const validator = require('express-validator');
 
 // define path
-// global.__base = '';
-global.__path_app =  pathConfig.folder_app + '/';
+global.__base = './';
+global.__path_app = __base + pathConfig.folder_app + '/';
 global.__path_configs = __path_app + pathConfig.folder_configs + '/';
 global.__path_helpers = __path_app + pathConfig.folder_helpers + '/';
 global.__path_routes = __path_app + pathConfig.folder_routes + '/';
@@ -23,7 +23,7 @@ global.__path_views_blog = __path_views + pathConfig.folder_module_blog + '/';
 
 global.__path_models = __path_app + pathConfig.folder_models + '/';
 global.__path_middleware = __path_app + pathConfig.folder_middleware + '/';
-global.folder_public = pathConfig.folder_public + '/';
+global.folder_public = __base + pathConfig.folder_public + '/';
 global.folder_uploads = folder_public + pathConfig.folder_uploads + '/';
 
 var systemConfig = require(__path_configs + 'system');
@@ -38,8 +38,8 @@ var moment = require('moment');
 // connect mongodb
 main().catch(err => console.log('err'));
 async function main() {
-  // await mongoose.connect('mongodb://localhost:27017/trainingNodejs');
-  await mongoose.connect('mongodb+srv://nhattuannguyen12c6:nhattuan12c6@cluster0.t6pff.mongodb.net/trainingNodejs');
+  await mongoose.connect('mongodb://localhost:27017/trainingNodejs');
+  // await mongoose.connect('mongodb+srv://nhattuannguyen12c6:nhattuan12c6@cluster0.t6pff.mongodb.net/trainingNodejs');
   console.log('connect success');
 }
 
