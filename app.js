@@ -9,7 +9,9 @@ const pathConfig = require('./path');
 const validator = require('express-validator');
 
 // define path
-global.__base = './';
+// console.log(process.cwd());
+// console.log(process.cwd());
+global.__base = process.cwd() + '/';
 global.__path_app = __base + pathConfig.folder_app + '/';
 global.__path_configs = __path_app + pathConfig.folder_configs + '/';
 global.__path_helpers = __path_app + pathConfig.folder_helpers + '/';
@@ -38,8 +40,8 @@ var moment = require('moment');
 // connect mongodb
 main().catch(err => console.log('err'));
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/trainingNodejs');
-  // await mongoose.connect('mongodb+srv://nhattuannguyen12c6:nhattuan12c6@cluster0.t6pff.mongodb.net/trainingNodejs');
+  // await mongoose.connect('mongodb://localhost:27017/trainingNodejs');
+  await mongoose.connect('mongodb+srv://nhattuannguyen12c6:nhattuan12c6@cluster0.t6pff.mongodb.net/trainingNodejs');
   console.log('connect success');
 }
 
@@ -71,7 +73,7 @@ app.use(validator({
 }));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(process.cwd(), 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', __path_views_admin + 'backend');
@@ -80,7 +82,7 @@ app.set('layout', __path_views_admin + 'backend');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.locals.systemConfig = systemConfig;
 app.locals.moment = moment;
