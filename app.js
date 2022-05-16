@@ -9,8 +9,8 @@ const pathConfig = require('./path');
 const validator = require('express-validator');
 
 // define path
-global.__base = __dirname + '/';
-global.__path_app = __base + pathConfig.folder_app + '/';
+// global.__base = '';
+global.__path_app =  pathConfig.folder_app + '/';
 global.__path_configs = __path_app + pathConfig.folder_configs + '/';
 global.__path_helpers = __path_app + pathConfig.folder_helpers + '/';
 global.__path_routes = __path_app + pathConfig.folder_routes + '/';
