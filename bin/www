@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../aspp');
+var app = require('../app');
 var debug = require('debug')('project-nodejs:server');
 var http = require('http');
 
