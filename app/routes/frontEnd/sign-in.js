@@ -26,11 +26,11 @@ router.post('/', (req, res, next) => {
   let item = Object.assign(req.body);
 
   if (errors.length <= 0) {
-    item.name = item.name;
+    item.name = item.username;
     item.status = 'active';
     item.ordering = 1;
     usersModel.saveItems(item, 'sign-in').then(() => {
-      req.flash('success', notify.ADD_SUCCESS, false);
+      req.flash('success', notify.SIGN_IN_SUCCESS, false);
       res.redirect(linkLogin);
     });
   } else {
