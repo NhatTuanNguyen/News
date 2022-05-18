@@ -122,6 +122,14 @@ module.exports = {
             };
             return new Model(item).save();
 
+        } else if (options == 'sign-in') {
+            item.password = crypto.createHash('md5').update(item.password).digest("hex");
+            item.created = {
+                user_id: 0,
+                user_name: 'admin',
+                time: Date.now(),
+            };
+            return new Model(item).save();
         } else if (options == 'edit') {
             return Model.updateOne({ _id: item.id }, {
                 name: item.name,

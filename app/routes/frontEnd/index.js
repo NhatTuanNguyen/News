@@ -7,6 +7,7 @@ const middlewareGetGoldCoinPrice = require(__path_middleware + 'goldCoinPrice');
 const middlewareGetSettings = require(__path_middleware + 'getSettings');
 
 router.use('/auth',require('./auth'));
+router.use('/sign-in',require('./sign-in'));
 router.use('/',
     middlewareGetInfo,
     middlewareGetCategoryForMenu,
