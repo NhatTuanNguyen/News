@@ -2,8 +2,8 @@ const util  = require('util');
 const notify= require(__path_configs + 'notify');
 
 const options = {
-    username: { min: 5, max: 30 },
-    password: { min: 5, max: 30 },
+    username: { min: 4, max: 30 },
+    password: { min: 1, max: 50 },
 }
 
 module.exports = {
@@ -14,8 +14,7 @@ module.exports = {
             .isLength({ min: options.username.min, max: options.username.max })
 
         // PASSWORD
-        req.checkBody('password', util.format(notify.ERROR_NAME, options.password.min, options.password.max) )
-            .isLength({ min: options.password.min, max: options.password.max })
-
+        req.checkBody('password', notify.ERROR_NOTEMPTY )
+            .notEmpty();
     }
 }

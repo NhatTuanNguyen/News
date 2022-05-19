@@ -6,6 +6,7 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa phần tử thành công',
     DELETE_MULTI_SUCCESS: 'Có %d phần tử được xóa thành công',
     ADD_SUCCESS: 'Thêm mới phần tử thành công',
+    SIGN_IN_SUCCESS: 'Đăng ký tài khoản thành công',
     EDIT_SUCCESS: 'Cập nhật thông tin phần tử thành công',
     ERROR_NAME: 'Chiều dài từ %d đến %d ký tự',
     ERROR_ORDERING: 'Phải là số nguyên lớn hơn %d và bé hơn %d',

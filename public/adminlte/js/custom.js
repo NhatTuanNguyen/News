@@ -254,6 +254,11 @@ $(document).ready(function (e) {
             URL.revokeObjectURL(output.src) // free memory
         }
     });
+    $('#inputPassword3').keyup(() => {
+        var text = $('#inputPassword3').val();
+        text = CryptoJS.MD5(text);
+        $('input[name="password"]').val(text);
+    })
 });
 
 
@@ -326,8 +331,7 @@ const alerDelete = (test) => {
                 'error'
             )
         }
-    })
-
+    });
 }
 
 // kiểm tra số lượng đã checked và action lựa chọn

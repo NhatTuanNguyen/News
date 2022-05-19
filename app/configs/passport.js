@@ -13,7 +13,7 @@ module.exports = (passport) => {
             if (!user) { 
               return done(null, false,{ message: 'Tên user không đúng' }); 
             } else {
-              if (md5(password) != user.password) { 
+              if (password != user.password) { 
                 return done(null, false,{ message: 'Mật khẩu không đúng' }); 
               } else {
                 console.log('dang nhap thanh cong');

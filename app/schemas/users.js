@@ -3,9 +3,12 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema({ 
     name: String,
     username: String,
+    email: String,
+    birthdate: Date,
     password: String,
     status: String,
     ordering: Number,
+    phonenumber: String,
     content: String,
     avatar: String,
     group: {
