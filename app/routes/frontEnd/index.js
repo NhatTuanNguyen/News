@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const middlewareGetInfo = require(__path_middleware + 'getUserInfo');
-const middlewareGetCategoryForMenu = require(__path_middleware + 'getCategoryForMenu');
+const middlewareGetCategoryForMenu = require(__path_middleware + 'getCategoryforMenu');
 const middlewareGetArticleRandom = require(__path_middleware + 'getArticleRandom');
 const middlewareGetGoldCoinPrice = require(__path_middleware + 'goldCoinPrice');
 const middlewareGetSettings = require(__path_middleware + 'getSettings');
