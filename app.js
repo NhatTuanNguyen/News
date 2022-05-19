@@ -86,7 +86,7 @@ app.locals.systemConfig = systemConfig;
 app.locals.moment = moment;
 
 app.use('/', require(__path_routes + 'frontendd/index'));
-app.use(`/${systemConfig.prefixAdmin}`, require(__path_routes + 'backend/index'));
+app.use(`/${systemConfig.prefixAdmin}`, require(__path_routes + 'backendd/index'));
 
 
 // catch 404 and forward to error handler
