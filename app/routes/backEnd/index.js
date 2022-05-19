@@ -11,6 +11,6 @@ router.use('/groups',require('./groups'));
 router.use('/users',require('./users'));
 router.use('/article',require('./article'));
 router.use('/settings',require('./settings'));
-router.use('/general-news',require('./generalNews'));
+router.use('/general-news',require('./general-news'));
 
 module.exports = router;

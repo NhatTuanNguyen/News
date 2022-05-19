@@ -5,10 +5,10 @@ let parser = new Parser();
 var parserHtml = require('node-html-parser');
 
 
-var generalNewsModel = require(__path_models + 'generalNews');
+var generalNewsModel = require(__path_models + 'general-news');
 const paramsHelper = require(__path_helpers + 'params');
 
-const folderView = __path_views_blog + 'pages/generalNews/';
+const folderView = __path_views_blog + 'pages/general-news/';
 const layoutBlog = __path_views_blog + 'frontend';
 
 /* GET home page. */

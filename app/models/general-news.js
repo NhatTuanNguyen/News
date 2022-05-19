@@ -1,4 +1,4 @@
-var Model = require(__path_schemas + 'generalNews');
+var Model = require(__path_schemas + 'general-news');
 
 module.exports = {
     listItems: (params) => {

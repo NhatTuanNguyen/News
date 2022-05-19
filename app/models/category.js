@@ -1,5 +1,5 @@
 var Model = require(__path_schemas + 'category');
-var convertToSlugHelper = require(__path_helpers + 'converToSlug');
+var convertToSlugHelper = require(__path_helpers + 'conver-to-slug');
 
 module.exports = {
     listItems: (params) => {

@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const util = require('util');
-var generalNewsModel = require(__path_models + 'generalNews');
+var generalNewsModel = require(__path_models + 'general-news');
 const ultilsHelper = require(__path_helpers + 'ultils');
-const paramsHelper = require(__path_helpers + 'Params');
-const validatorItems = require(__path_validators + 'generalNews');
+const paramsHelper = require(__path_helpers + 'params');
+const validatorItems = require(__path_validators + 'general-news');
 var systemConfig = require(__path_configs + 'system');
 var notify = require(__path_configs + 'notify');
 let linkIndex = `/${systemConfig.prefixAdmin}/general-news`;
@@ -12,7 +12,7 @@ let linkIndex = `/${systemConfig.prefixAdmin}/general-news`;
 const pageTitleIndex = 'General News';
 const pageTitleAdd = pageTitleIndex + ' - Add';
 const pageTitleEdit = pageTitleIndex + ' - Edit';
-const folderView = __path_views_admin + 'pages/generalNews/'
+const folderView = __path_views_admin + 'pages/general-news/'
 
 /* GET users listing. */
 router.get('(/status/:status)?', async (req, res, next) => {
@@ -22,7 +22,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
   params.currentStatus = paramsHelper.getParams(req.params, 'status', 'all');
   params.sortField = paramsHelper.getParams(req.session, 'sort_field', 'link');
   params.sortType = paramsHelper.getParams(req.session, 'sort_type', 'asc');
-  let statusFilter = await ultilsHelper.createFilterStatus(params, 'generalNews');
+  let statusFilter = await ultilsHelper.createFilterStatus(params, 'general-news');
 
   params.paginations = {
     totalItems: 1,

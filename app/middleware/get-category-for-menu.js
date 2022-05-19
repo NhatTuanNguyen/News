@@ -1,5 +1,5 @@
 var categoryModel = require(__path_models + 'category');
-var generalNewsModel = require(__path_models + 'generalNews');
+var generalNewsModel = require(__path_models + 'general-news');
 
 module.exports = async (req, res, next) => {
     //Category

@@ -1,5 +1,5 @@
 var Model = require(__path_schemas + 'article');
-var convertToSlugHelper = require(__path_helpers + 'converToSlug');
+var convertToSlugHelper = require(__path_helpers + 'conver-to-slug');
 const fileHelper = require(__path_helpers + 'file');
 const folderUpload = 'public/uploads/article/';
 

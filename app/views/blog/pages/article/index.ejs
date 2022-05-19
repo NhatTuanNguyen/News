@@ -1,6 +1,6 @@
 <% const folderUpload = '/uploads/article/' %>
-<% include ./../../helpers/formatDate %>
-<% include ./../../helpers/formatSummary %>
+<% include ./../../helpers/format-date %>
+<% include ./../../helpers/format-summary %>
 
 <!-- ##### Post Details Title Area Start ##### -->
 <div class="post-details-title-area bg-overlay clearfix" style="background-image: url(<%= folderUpload + itemArticle.thumb %>)">
@@ -129,7 +129,7 @@
             <div class="col-12 col-sm-9 col-md-6 col-lg-4">
                 <div class="sidebar-area">
                     <% include ./../../elements/sildebar %> 
-                    <% include ./../../elements/sildebarNews %> 
+                    <% include ./../../elements/sildebar-news %> 
                     <!-- Single Widget Area -->
                     <div class="single-widget-area">
 
