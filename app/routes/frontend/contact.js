@@ -4,7 +4,7 @@ var contactModel = require(__path_models + 'contact');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 
-let linkIndex = '/contact';
+let linkIndex = '/lien-he';
 var notify = require(__path_configs + 'notify');
 const folderView = __path_views_blog + 'pages/contact/';
 const layoutBlog = __path_views_blog + 'frontend';

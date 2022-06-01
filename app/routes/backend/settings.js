@@ -31,6 +31,7 @@ router.post('/save', (req, res, next) => {
   let data;
   uploadLogo(req, res, async function (errUpload) {
     let item = Object.assign(req.body);
+    console.log(item);
     await settingsModel.getItem().then((itemModel) => {
       data = itemModel
     });
