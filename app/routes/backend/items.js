@@ -100,7 +100,6 @@ router.post('/changeOrdering', function (req, res, next) {
   // use Ajax
   let id = req.body.id;
   let orderings = req.body.value;
-
   itemsModel.changeOrdering(orderings, id).then(() => {
     res.json('Cập nhật thành công');
   });

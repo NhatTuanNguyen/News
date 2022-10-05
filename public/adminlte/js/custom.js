@@ -177,9 +177,7 @@ $(document).ready(function (e) {
             const changeStatusElement = $(this);
             const icon = changeStatusElement.find('i');
             const link = changeStatusElement.attr('href');
-            const arrStatus = link.split("/");
-            // const id = arrStatus[3];
-            // const currentStatus = arrStatus[4];
+            
             console.log(changeStatusElement.find('i'));
             $.ajax({
                 type: "get",
@@ -190,11 +188,11 @@ $(document).ready(function (e) {
                     if (response == "active") {
                         changeStatusElement.removeClass("btn-success");
                         changeStatusElement.attr("href", link.replace('active', 'inactive'));
-                        changeStatusElement.removeClass("btn-success");
+                        // changeStatusElement.removeClass("btn-success");
                         changeStatusElement.addClass("btn-danger");
                         icon.replaceWith('<i class="fas fa-minus"></i>');
                     } else {
-                        changeStatusElement.removeClass("btn-success");
+                        // changeStatusElement.removeClass("btn-success");
                         changeStatusElement.attr("href", link.replace('inactive', 'active'));
                         changeStatusElement.removeClass("btn-danger");
                         changeStatusElement.addClass("btn-success");
@@ -220,7 +218,6 @@ $(document).ready(function (e) {
 
     // Change category or group
     $(".changeType").change(function (e) {
-        console.log('1');
         e.preventDefault();
         const id = $(this).attr('data-id');
         const idType = $(this).val();

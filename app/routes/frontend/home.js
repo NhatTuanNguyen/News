@@ -10,7 +10,6 @@ router.get('/', async function(req, res, next) {
 
   let itemsSpecial = [];
   let itemsNew = [];
-
   // Special
   await articleModel.listItemsFrontend(null,{task:'itemsSpecial'}).then((items) => {
     itemsSpecial = items
